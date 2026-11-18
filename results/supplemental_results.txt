@@ -1,0 +1,35 @@
+Panel: 3,142 counties x 6 years. Long file: 56,556 rows.
+
+A. Primary care physicians as comparator (Poisson, per one-category RUCC increase)
+   PCPs: rate ratio 0.914 (0.903-0.925), -8.6%
+   NPs: rate ratio 0.964 (0.949-0.979), -3.6%; ratio vs PCPs 1.055 (1.037-1.073), p=0.000
+   PAs: rate ratio 0.932 (0.915-0.950), -6.8%; ratio vs PCPs 1.020 (1.000-1.040), p=0.051
+   2023 NPs per primary care physician, nonmetro: 1.86
+   2023 NPs per primary care physician, metro: 1.51
+
+B. Negative binomial (NB2), per one-category RUCC increase
+   Physicians: rate ratio 0.852 (0.841-0.862)
+   NPs: rate ratio 0.976 (0.967-0.984); ratio vs physicians 1.146 (1.134-1.157), p=6.0e-160
+   PAs: rate ratio 0.962 (0.949-0.975); ratio vs physicians 1.129 (1.116-1.143), p=5.9e-86
+   Dispersion (alpha): 0.518
+
+C. RUCC categorical (Poisson): rate ratio vs RUCC 1, by profession
+               Physicians                  NPs                  PAs
+RUCC                                                               
+2     0.817 (0.728-0.917)  1.059 (0.956-1.173)  1.125 (1.002-1.264)
+3     0.735 (0.633-0.853)  1.121 (1.010-1.245)  1.070 (0.951-1.203)
+4     0.383 (0.344-0.426)  0.812 (0.730-0.904)  0.749 (0.663-0.846)
+5     0.669 (0.516-0.868)  1.200 (1.012-1.423)  1.004 (0.828-1.217)
+6     0.295 (0.249-0.349)  0.736 (0.668-0.812)  0.581 (0.483-0.700)
+7     0.420 (0.372-0.474)  0.995 (0.893-1.109)  0.773 (0.669-0.892)
+8     0.166 (0.148-0.187)  0.601 (0.546-0.662)  0.439 (0.386-0.500)
+9     0.187 (0.170-0.207)  0.729 (0.661-0.805)  0.603 (0.533-0.682) 
+
+D. Year x RUCC x profession (year centered at 2018)
+   NP vs physician gradient, change per year: ratio 1.0002, p=0.691
+   PA vs physician gradient, change per year: ratio 0.9974, p=2.13e-06
+
+E. Nonmetro counties only: rate ratios for urban population size (ref 20,000+) and not adjacent to metro
+   Urban pop 5,000-20,000: physicians 0.729 (0.625-0.851); NPs 0.900 (0.822-0.984) [vs phys p=0.001]; PAs 0.789 (0.682-0.912) [vs phys p=0.173]
+   Urban pop <5,000: physicians 0.372 (0.326-0.424); NPs 0.708 (0.648-0.772) [vs phys p=0.000]; PAs 0.615 (0.551-0.686) [vs phys p=0.000]
+   Not adjacent to metro: physicians 1.534 (1.298-1.813); NPs 1.377 (1.257-1.509) [vs phys p=0.094]; PAs 1.352 (1.197-1.527) [vs phys p=0.033]
