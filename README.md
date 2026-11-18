@@ -13,7 +13,9 @@ County-year panel of physicians, nurse practitioners (NPs), and physician assist
 | `scripts/clean_panel.py` | Builds the clean panel from the raw panel |
 | `scripts/reproduce_abstract.py` | Main results (2023 RUCC); writes `results/main_results.txt` |
 | `scripts/sensitivity_rucc2013.py` | Reruns the main results with 2013 RUCC; writes `results/sensitivity_rucc2023_vs_2013.csv` |
-| `results/` | Output of the two analysis scripts |
+| `scripts/supplemental_analyses.py` | Sensitivity and supplemental models (primary care physician comparator, negative binomial, categorical RUCC, year interaction, urban size and adjacency); writes `results/supplemental_results.txt` |
+| `spss/rural_workforce_models.sps` | SPSS syntax that refits the models from the clean CSV, with the expected results in comments |
+| `results/` | Output of the three analysis scripts |
 
 ## How the raw panel was built
 
@@ -28,7 +30,12 @@ pip install -r requirements.txt
 python scripts/clean_panel.py
 python scripts/reproduce_abstract.py
 python scripts/sensitivity_rucc2013.py
+python scripts/supplemental_analyses.py
 ```
+
+### Checking the models in SPSS
+
+No Python is needed. Download `data/AHRF_allphys_NP_PA_panel_2018_2023_clean.csv` and `spss/rural_workforce_models.sps`, open the syntax in SPSS, change the file path on the `FILE HANDLE` line, and Run All. The syntax reshapes the data to one row per county-year-profession and fits each model with GENLIN. County-clustered standard errors are reproduced with GEE (county as subject, independent working correlation, robust covariance). Rate ratios match the Python output; confidence limits can differ slightly in the third decimal because Python applies a small-sample correction to clustered errors.
 
 ## Rurality classification
 
@@ -43,7 +50,7 @@ The primary classification is the USDA **2023 Rural-Urban Continuum Codes** (bas
 
 1. **Territories removed.** Puerto Rico, Guam and the U.S. Virgin Islands are dropped; the panel covers the 50 states and DC.
 2. **Empty rows for defunct units removed.** Six Alaska and Virginia units that no longer exist had rows with no counts and no population.
-3. **Alaska.** Valdez-Cordova (02261) split into Chugach (02063) and Copper River (02066) in 2019. The two new areas are summed back into 02261 for every year so the unit stays constant.
+3. **Alaska.** Valdez-Cordova (02261) split into Chugach (02063) and Copper River (02066) in 2019. The two new areas are summed back into 02261 (population from 2020, clinician counts from 2021, the years they were reported separately) so the unit stays constant across all years.
 4. **Connecticut population.** In 2022–2023 the AHRF puts clinician counts on the 8 legacy counties and population on the 9 planning regions. The legacy counties are kept; their 2022–2023 population is imputed as the statewide planning-region total times each county's 2021 share of state population. Imputed values are flagged in `pop_imputed`.
 5. **2013 RUCC corrections** (used in the sensitivity analysis). Pueblo, CO (invalid code 32 → 3), Rio Arriba, NM (invalid code 45 → 4), and Fremont, CO (5 → 4).
 6. **2023 RUCC added** as the primary classification (see above).
