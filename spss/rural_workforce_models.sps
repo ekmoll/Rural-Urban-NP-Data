@@ -3,6 +3,7 @@
 * Rural Clinician Workforce Panel, 2018-2023: SPSS replication of the models.
 *
 * Reads the cleaned panel (data/AHRF_allphys_NP_PA_panel_2018_2023_clean.csv),
+* reproduces the population-weighted clinician densities (Tables 1-2),
 * reshapes it to one row per county-year-profession, and fits the Poisson models
 * reported in the manuscript. Expected results from the Python scripts are given
 * in comments under each model so the output can be compared line by line.
@@ -82,6 +83,37 @@ COMPUTE nonadj = ANY(rucc23, 5, 7, 9).
 RECODE rucc23 (1=10) (ELSE=COPY) INTO rucc_cat.
 VALUE LABELS rucc_cat 10 'RUCC 1 (ref)'.
 EXECUTE.
+
+* -----------------------------------------------------------------------------.
+* DESCRIPTIVE DENSITIES (Table 2, Table 1 / Figure 1).
+* Densities in the manuscript are POPULATION-WEIGHTED: total clinicians /
+* total population x 100,000 within each group. Weighting the county *_rate
+* columns by population gives exactly this. An unweighted mean of the county
+* rates gives smaller numbers (e.g., 2023 physicians 225.6 metro, 98.6 nonmetro)
+* because every county counts equally regardless of size.
+* is_nonmetro: 0 = metropolitan, 1 = nonmetropolitan.
+* -----------------------------------------------------------------------------.
+
+* Table 2: by metropolitan status, 2018 and 2023.
+* Expected (metro, nonmetro):
+*   2018  physicians 334.5, 125.9   NPs 80.9, 65.0    PAs 42.8, 29.3   PCPs 79.7, 52.1
+*   2023  physicians 370.1, 133.0   NPs 120.8, 94.5   PAs 56.8, 35.3   PCPs 80.2, 50.8.
+TEMPORARY.
+SELECT IF ANY(year, 2018, 2023).
+WEIGHT BY population.
+MEANS TABLES=phys_all_rate np_rate pa_rate pcphys_rate BY year BY is_nonmetro
+  /CELLS=MEAN.
+
+* Table 1 / Figure 1: by RUCC category, 2023.
+* Expected (RUCC 1-9):
+*   physicians 399.4, 323.6, 289.8, 150.9, 252.2, 115.6, 161.3, 63.6, 71.6
+*   NPs        118.7, 123.2, 128.7, 96.6, 132.4, 85.0, 116.4, 69.1, 83.5
+*   PAs         55.4, 60.8, 56.5, 40.7, 49.8, 30.5, 39.8, 22.1, 30.3.
+TEMPORARY.
+SELECT IF (year = 2023).
+WEIGHT BY population.
+MEANS TABLES=phys_all_rate np_rate pa_rate BY rucc23
+  /CELLS=MEAN.
 
 DATASET NAME wide.
 * Keep an untouched copy of the wide file for the primary care models at the end.
